@@ -1,0 +1,95 @@
+-- Tabla Rol
+CREATE TABLE Rol (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(200)
+);
+-- Tabla Usuario
+CREATE TABLE Usuario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    genero ENUM('M', 'F', 'Otro') NOT NULL,
+    correo_electronico VARCHAR(150) UNIQUE NOT NULL,
+    telefono VARCHAR(20),
+    rol INT NOT NULL,
+    contrasena VARCHAR(255) NOT NULL,
+    estado TINYINT NOT NULL DEFAULT 1,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_usuario_rol FOREIGN KEY (rol) REFERENCES Rol(id)
+);
+
+
+
+-- Tabla Asignacion
+CREATE TABLE Asignacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_client INT NOT NULL,
+    id_entrenador INT NOT NULL,
+    fecha_asignacion DATE NOT NULL,
+    fecha_fin DATE,
+    estado TINYINT NOT NULL,
+    CONSTRAINT fk_asignacion_cliente FOREIGN KEY (id_client) REFERENCES Usuario(id),
+    CONSTRAINT fk_asignacion_entrenador FOREIGN KEY (id_entrenador) REFERENCES Usuario(id)
+);
+
+-- Tabla Avance_Medico
+CREATE TABLE Avance_Medico (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    peso DECIMAL(5,2),
+    altura DECIMAL(5,2),
+    condicion VARCHAR(255),
+    actividad_fisica VARCHAR(255),
+    imc DECIMAL(5,2),
+    id_usuario INT NOT NULL,
+    fecha_toma DATE NOT NULL,
+    CONSTRAINT fk_avance_usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id)
+);
+
+-- Tabla Log_Ingreso
+CREATE TABLE Log_Ingreso (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    hora_entrada DATETIME NOT NULL,
+    hora_salida DATETIME,
+    CONSTRAINT fk_login_usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id)
+);
+
+-- Tabla Ejercicio
+CREATE TABLE Ejercicio (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion VARCHAR(255)
+);
+
+-- Tabla Rutina
+CREATE TABLE Rutina (
+    id_rutina INT NOT NULL,
+    id_ejercicio INT NOT NULL,
+    PRIMARY KEY (id_rutina, id_ejercicio),
+    CONSTRAINT fk_rutina_ejercicio FOREIGN KEY (id_ejercicio) REFERENCES Ejercicio(id)
+);
+
+-- Tabla Rutina_Preescrita
+CREATE TABLE Rutina_Preescrita (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_asignacion INT NOT NULL,
+    id_rutina INT NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE,
+    CONSTRAINT fk_rutina_asignacion FOREIGN KEY (id_asignacion) REFERENCES Asignacion(id),
+    CONSTRAINT fk_rutina_rutina FOREIGN KEY (id_rutina) REFERENCES Rutina(id_rutina)
+);
+
+-- Tabla Validacion_Rutina
+CREATE TABLE Validacion_Rutina (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    id_rutina_preescrita INT NOT NULL,
+    id_ejercicio INT NOT NULL,
+    repeticion INT,
+    `check` BOOLEAN,
+    CONSTRAINT fk_validacion_rutina FOREIGN KEY (id_rutina_preescrita) REFERENCES Rutina_Preescrita(id),
+    CONSTRAINT fk_validacion_ejercicio FOREIGN KEY (id_ejercicio) REFERENCES Ejercicio(id)
+);
