@@ -1,0 +1,15 @@
+<!-- Botón para abrir/cerrar menú -->
+<button class="toggle-btn" (click)="toggleSidebar()">
+  ☰
+</button>
+
+<!-- Menú lateral -->
+<div class="sidebar" [class.open]="isOpen">
+  <ul>
+    <li><a href="#">🏋️ Rutina Diaria</a></li>
+    <li><a href="#">📈 Progreso</a></li>
+    <li><a href="#">❤️ Datos de Salud</a></li>
+    <li><a href="#">🚪 Cerrar Sesión</a></li>
+    <!--li><a href="#"><span class="material-icons">logout</span>🚪 Cerrar Sesión</a></li-->
+  </ul>
+</div>

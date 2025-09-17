@@ -1,0 +1,62 @@
+.asignar-container {
+  background-color: #F5F5F5;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2, h3, label {
+  color: #0D0D0D;
+  font-weight: bold;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #1D3557;
+  border-radius: 0.5rem;
+  outline: none;
+  color: #1D1D1D;
+}
+
+select:focus {
+  border-color: #D62828;
+  box-shadow: 0 0 0 2px rgba(214, 40, 40, 0.2);
+}
+
+.btn-success {
+  background-color: #457B9D;
+  color: #F1FAEE;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-success:hover { background-color: #365f7a; }
+
+.btn-danger {
+  background-color: #E63946;
+  color: #F1FAEE;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-danger:hover { background-color: #b92f3a; }
+
+.rutina-lista {
+  background-color: #F1FAEE;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  color:#457B9D;
+}

@@ -1,0 +1,147 @@
+/* Paleta de Colores */
+:root {
+    --color-background: #0F0F0F; /* Negro metálico */
+    --color-primary: #00B4D8;   /* Azul eléctrico */
+    --color-secondary: #90E0EF; /* Azul claro */
+    --color-accent: #CAF0F8;    /* Casi blanco luminoso */
+    --color-detail: #FF6B6B;    /* Rojo coral */
+    --color-text-light: #CAF0F8;
+    --color-text-dark: #0F0F0F;
+}
+
+/* Estilos Generales */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text-light);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Encabezado Principal */
+.main-header {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-text-dark);
+    border-bottom: 5px solid var(--color-detail);
+}
+
+.main-header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.main-header p {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+/* Contenedor Principal */
+.main-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+/* Sección de Inicio de Sesión */
+.login-section {
+    background-color: rgba(30, 30, 30, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid var(--color-secondary);
+}
+
+.login-section h2 {
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+/* Formulario */
+.login-form .form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-light);
+    font-weight: bold;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 2px solid var(--color-secondary);
+    border-radius: 5px;
+    background-color: var(--color-background);
+    color: var(--color-text-light);
+    transition: all 0.3s ease;
+}
+
+.login-form input[type="email"]:focus,
+.login-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 8px var(--color-primary);
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-text-dark);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-secondary);
+    transform: translateY(-2px);
+}
+
+.btn-accent {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.btn-accent:hover {
+    color: var(--color-detail); /* Rojo coral en hover */
+    text-decoration: underline;
+}
+
+.signup-text {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* Pie de página */
+.main-footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.2);
+}

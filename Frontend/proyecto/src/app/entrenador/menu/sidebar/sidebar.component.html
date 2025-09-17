@@ -1,0 +1,14 @@
+<!-- Botón para abrir/cerrar menú -->
+<button class="toggle-btn" (click)="toggleSidebar()">
+  ☰
+</button>
+
+<!-- Menú lateral -->
+<div class="sidebar" [class.open]="isOpen">
+  <ul>
+    <li><a href="#">🏋️ Crear Rutina</a></li>
+    <li><a href="#">📝 Asignar Rutina</a></li>
+    <li><a href="#">👥 Gestionar Cliente</a></li>
+    <li><a href="#">🚪 Cerrar Sesión</a></li>
+  </ul>
+</div>

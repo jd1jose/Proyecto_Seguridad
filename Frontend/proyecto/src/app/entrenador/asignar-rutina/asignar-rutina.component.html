@@ -1,0 +1,36 @@
+<app-sidebar></app-sidebar>
+<div class="asignar-container">
+  <h2>Asignar Rutina a Cliente</h2>
+
+  <!-- Selección de cliente -->
+  <div class="form-group">
+    <label for="clienteSelect">Seleccionar Cliente</label>
+    <select id="clienteSelect" [(ngModel)]="clienteSeleccionado" class="form-select">
+      <option value="" disabled selected>-- Selecciona un cliente --</option>
+      <option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente }}</option>
+    </select>
+  </div>
+
+  <!-- Selección de rutina -->
+  <div *ngIf="clienteSeleccionado" class="form-group">
+    <label for="rutinaSelect">Seleccionar Rutina</label>
+    <select id="rutinaSelect" [(ngModel)]="rutinaSeleccionada" class="form-select">
+      <option value="" disabled selected>-- Selecciona una rutina --</option>
+      <option *ngFor="let r of rutinas" [value]="r.nombre">{{ r.nombre }}</option>
+    </select>
+  </div>
+
+  <!-- Botón Guardar Asignación -->
+  <button class="btn btn-success mt-2" (click)="guardarAsignacion()">Guardar Asignación</button>
+
+  <!-- Mostrar asignaciones previas -->
+    <div *ngIf="(asignaciones[clienteSeleccionado] ?? []).length > 0" class="rutina-lista mt-4">
+    <h3>Rutinas asignadas a {{ clienteSeleccionado }}</h3>
+    <ul>
+      <li *ngFor="let r of asignaciones[clienteSeleccionado]; let i = index">
+        {{ r }}
+        <button class="btn btn-danger btn-sm ms-2" (click)="eliminarAsignacion(clienteSeleccionado!, i)">Eliminar</button>
+      </li>
+    </ul>
+  </div>
+</div>

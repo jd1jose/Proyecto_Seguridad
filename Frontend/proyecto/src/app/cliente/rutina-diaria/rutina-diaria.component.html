@@ -1,0 +1,27 @@
+<app-sidebar></app-sidebar>
+<!--app-header></app-header-->
+
+
+ <div class="rutina-container">
+  <h2>Rutina Diaria - {{ hoy | date:'fullDate' }}</h2>
+
+  <div class="lista-ejercicios">
+    <div *ngFor="let ejercicio of ejercicios; let i = index" class="ejercicio-item">
+      <input 
+        type="checkbox" 
+        [id]="'ejercicio'+i" 
+        [(ngModel)]="ejercicio.completado"
+        (change)="verificarTodosCompletados()">
+      <label [for]="'ejercicio'+i">{{ ejercicio.nombre }}</label>
+    </div>
+  </div>
+
+  <button *ngIf="todosCompletados" class="btn-finalizar" (click)="finalizarDia()">
+    Finalizar Día
+  </button>
+
+  <!-- Canvas para confeti -->
+  <canvas #confettiCanvas class="confetti-canvas"></canvas>
+</div>
+
+
