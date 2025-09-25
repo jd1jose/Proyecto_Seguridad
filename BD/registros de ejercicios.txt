@@ -19,3 +19,9 @@ INSERT INTO ejercicio (nombre, descripcion) VALUES
 ('Press de pierna en máquina', 'Ejercicio para cuádriceps, glúteos y femorales.'),
 ('Curl femoral en máquina', 'Ejercicio específico para isquiotibiales.'),
 ('Elevación de talones de pie', 'Ejercicio de gemelos para fortalecer pantorrillas.');
+
+INSERT INTO bd_gym.rol
+(id, nombre, descripcion)
+VALUES(1, 'Administrador', 'administrador'),
+(2, 'Cliente', 'cliente'),
+(3, 'Entrenador', 'entrenador');
