@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { SidebarComponent } from "../menu/sidebar/sidebar.component";
-import { HeaderComponent } from "../menu/header/header.component";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ClienteService } from '../../general/servicios/cliente.service';
+import { DatosSalud } from '../../general/interfaces/cliente';
 
 @Component({
   selector: 'app-dato-salud',
   templateUrl: './dato-salud.component.html',
   styleUrls: ['./dato-salud.component.css'],
-  imports: [SidebarComponent, HeaderComponent, FormsModule, CommonModule]
+  imports: [ FormsModule, CommonModule]
 })
 export class DatoSaludComponent implements OnInit {
   edad!: number;
@@ -18,6 +18,7 @@ export class DatoSaludComponent implements OnInit {
   impedimento: string = '';
   actividad!: string;
   imc: number = 0;
+  //ultimoDato: any = null;
 
   dias = [
     { nombre: 'Lunes', seleccionado: false },
@@ -28,9 +29,33 @@ export class DatoSaludComponent implements OnInit {
     { nombre: 'Sábado', seleccionado: false },
     { nombre: 'Domingo', seleccionado: false },
   ];
-  constructor() { }
+  constructor(
+    private clienteService: ClienteService
+  ) { }
 
   ngOnInit() {
+    this.clienteService.obtenerUltimoDato().subscribe({
+      next: (res) => {
+        console.log("Último dato:", res);
+        //this.ultimoDato = res;
+        if (res) {
+          this.peso = res.peso;
+          this.altura = res.altura;
+          this.actividad = res.actividad_fisica;
+          this.imc = res.imc;
+
+          // Si la condición viene como texto plano
+          if (res.condicion) {
+            this.condiciones = {
+              cardiaca: res.condicion.includes("Cardiaca"),
+              diabetica: res.condicion.includes("Diabética"),
+              articular: res.condicion.includes("Articular")
+            };
+          }
+        }
+      },
+      error: (err) => console.error("Error al obtener último dato", err)
+    });
   }
 
   calcularIMC() {
@@ -39,5 +64,25 @@ export class DatoSaludComponent implements OnInit {
     } else {
       this.imc = 0;
     }
+  }
+
+  guardar() {
+    const datos: DatosSalud = {
+      edad: this.edad,
+      peso: this.peso,
+      altura: this.altura,
+      condiciones: this.condiciones,
+      impedimento: this.impedimento,
+      actividad: this.actividad,
+      imc: this.imc,
+      dias: this.dias
+    };
+
+    this.clienteService.guardarDatos(datos).subscribe({
+      next: (res) => {
+        alert('Datos guardados exitosamente');
+      },
+      error: (err) => console.error('Error al guardar datos', err)
+    });
   }
 }

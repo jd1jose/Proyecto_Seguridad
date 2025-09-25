@@ -145,3 +145,77 @@ body {
     color: rgba(255, 255, 255, 0.5);
     background-color: rgba(0, 0, 0, 0.2);
 }
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #F5F5F5; /* un gris claro */
+  font-family: Arial, sans-serif;
+}
+
+/* Layout principal */
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #F5F5F5; /* mismo gris claro */
+  transition: all 0.3s ease;
+}
+
+/* Área de contenido */
+.content {
+  margin-left: 200px;  /* 👈 ancho del sidebar */
+  margin-top: 60px;   /* 👈 altura del header */
+  padding: 20px;
+  background-color: #F5F5F5;
+  min-height: calc(100vh - 60px);
+  flex: 1;
+  transition: margin-left 0.3s ease;
+  justify-content: center; 
+  align-items: flex-start;
+  min-height: calc(100vh - 60px);
+}
+app-sidebar {
+  width: 200px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px; /* 👈 ajusta según tu diseño */
+  background: #f1faee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  z-index: 1000;
+}
+.layout:not(.sidebar-open) app-sidebar {
+  width: 0;
+  overflow: hidden;
+}
+.layout.sidebar-open .content {
+  margin-left: 200px;
+}
+/* Header con sidebar abierto */
+.layout.sidebar-open app-header header {
+  margin-left: 200px;   /* 👈 deja espacio para el sidebar */
+  width: calc(100% - 200px);
+}
+
+/* Header con sidebar cerrado */
+.layout:not(.sidebar-open) app-header header {
+  margin-left: 0;
+  width: 100%;
+}
+/* Si sidebar cerrado → ocupa todo */
+.layout:not(.sidebar-open) .content {
+  margin-left: 0;
+}

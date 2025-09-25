@@ -1,0 +1,114 @@
+/* Fondo general */
+.register-container {
+  background-color: #FAFAFA; /* Fondo claro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+  width: 100%;
+}
+
+/* Card central */
+.register-card {
+  background-color: #F1FAEE; /* Blanco hueso */
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px; 
+}
+
+/* Título */
+.register-title {
+  color: #E63946; /* Primario */
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+/* Inputs y labels */
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+
+}
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #1D1D1D; /* Texto */
+  font-weight: bold;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #457B9D; /* Secundario */
+  border-radius: 0.5rem;
+  outline: none;
+  font-size: 1rem;
+  background-color: #fff;
+}
+
+input:focus, select:focus {
+  border-color: #E63946; /* Primario */
+  box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+}
+
+/* Botón */
+.btn-primary {
+  background-color: #E63946; /* Primario */
+  color: #F1FAEE; /* Blanco hueso */
+  padding: 0.75rem;
+  width: 100%;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  grid-column: span 2;
+  margin-top: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: #b92f3a;
+}
+
+/* Texto de inicio */
+.login-text {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #1D1D1D;
+}
+
+.login-text a {
+  color: #457B9D; /* Secundario */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}
+form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 👈 dos columnas */
+  gap: 1.5rem;
+}
+/* Responsive */
+@media (max-width: 768px) {
+  form {
+    grid-template-columns: 1fr; 
+  }
+  .form-group.full-width,
+  button {
+    grid-column: span 1;
+  }
+}

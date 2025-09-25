@@ -1,0 +1,50 @@
+/* Contenedor del header */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: #F1FAEE;
+    color: #1D3557;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 900;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+    padding: 0 20px 0 60px; /* 👈 dejamos hueco para el botón */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Título principal */
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #457B9D;
+    /* Azul medio */
+}
+
+/* Subtítulo */
+header span {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Botón cerrar sesión */
+header button {
+    background: #E63946;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+header button:hover {
+    background: #b92f3a;
+}

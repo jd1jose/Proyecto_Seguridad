@@ -1,25 +1,26 @@
-<app-sidebar></app-sidebar>
 <div class="datos-container">
   <h2>Datos de Salud</h2>
 
   <form (ngSubmit)="calcularIMC()" #datosForm="ngForm">
 
     <!-- Edad -->
-    <div class="form-group">
+    <!--div class="form-group">
       <label for="edad">Edad</label>
       <input type="number" id="edad" name="edad" [(ngModel)]="edad" min="0" required>
-    </div>
+    </div-->
 
     <!-- Peso -->
     <div class="form-group">
       <label for="peso">Peso (kg)</label>
-      <input type="number" id="peso" name="peso" [(ngModel)]="peso" min="0" step="0.1" required>
+      <input type="number" id="peso" name="peso" [(ngModel)]="peso" (ngModelChange)="calcularIMC()" min="0" step="0.1"
+        required>
     </div>
 
     <!-- Altura -->
     <div class="form-group">
       <label for="altura">Altura (m)</label>
-      <input type="number" id="altura" name="altura" [(ngModel)]="altura" min="0" step="0.01" required>
+      <input type="number" id="altura" name="altura" [(ngModel)]="altura" (ngModelChange)="calcularIMC()" min="0"
+        step="0.01" required>
     </div>
 
     <!-- Condición -->
@@ -66,7 +67,7 @@
     </div>
 
     <!-- Botón guardar -->
-    <button type="submit" class="btn-primary">Guardar Datos</button>
+    <button type="submit" class="btn-primary" (click)="guardar()">Guardar Datos</button>
 
   </form>
 </div>

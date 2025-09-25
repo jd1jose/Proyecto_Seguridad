@@ -1,0 +1,9 @@
+<header class="header">
+  <h2 *ngIf="role === 'administrador'">Panel de Administrador</h2>
+  <h2 *ngIf="role === 'cliente'">Panel de Cliente</h2>
+  <h2 *ngIf="role === 'entrenador'">Panel de Entrenador</h2>
+
+  <div class="user-info">
+    <span>Bienvenido {{ role | titlecase }}</span>
+  </div>
+</header>

@@ -1,4 +1,3 @@
-<app-sidebar></app-sidebar>
 <div class="rutina-container">
   <h2>Crear Rutina</h2>
 
@@ -10,15 +9,22 @@
 
   <!-- Selección de ejercicios -->
   <div class="form-group d-flex align-items-center">
-    <select id="ejercicioSelect" [(ngModel)]="ejercicioSeleccionado" class="form-select me-2">
-      <option *ngFor="let ejercicio of ejercicios" [value]="ejercicio">{{ ejercicio }}</option>
+    <select id="ejercicioSelect" [(ngModel)]="ejercicioSeleccionado" (change)="onSelectChange()"
+      class="form-select me-2">
+      <option *ngFor="let ejercicio of ejercicios" [ngValue]="ejercicio">
+        {{ ejercicio.nombre }}
+      </option>
     </select>
-    <button class="btn btn-secondary" (click)="abrirModal()">Agregar Ejercicio</button>
+
+    <button class="btn btn-secondary" (click)="abrirModal()">
+      Agregar Ejercicio
+    </button>
   </div>
+
 
   <!-- Formulario de repeticiones y series -->
   <div *ngIf="ejercicioSeleccionado" class="form-ejercicio">
-    <h3>{{ ejercicioSeleccionado }}</h3>
+    <h3>{{ ejercicioSeleccionado?.nombre }}</h3>
     <div class="form-group">
       <label for="series">Series</label>
       <input type="number" id="series" [(ngModel)]="series" min="1" class="form-control">
@@ -32,10 +38,10 @@
 
   <!-- Mostrar rutina -->
   <div *ngIf="rutina.length > 0" class="rutina-lista">
-    <h3>Rutina: {{ nombreRutina }}</h3>
+    <!--h3>Rutina: {{ nombreRutina }}</h3-->
     <ul>
       <li *ngFor="let item of rutina; let i = index">
-        {{ item.nombre }} - {{ item.series }} series x {{ item.repeticiones }} repeticiones
+        {{ item.ejercicio.nombre }} - {{ item.series }} series x {{ item.repeticiones }} repeticiones
         <button class="btn btn-danger btn-sm ms-2" (click)="eliminarEjercicio(i)">Eliminar</button>
       </li>
     </ul>

@@ -1,1 +1,13 @@
-<app-inicio-sesion></app-inicio-sesion>
+<div class="layout" *ngIf="userRole" [ngClass]="{ 'sidebar-open': isSidebarOpen }">
+  <app-sidebar [role]="userRole" (toggle)="toggleSidebar()"></app-sidebar>
+
+  <main class="content">
+    <app-header [role]="userRole"></app-header>
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<!-- Si no hay sesión iniciada, mostramos el login -->
+<div *ngIf="!userRole">
+  <router-outlet></router-outlet>
+</div>

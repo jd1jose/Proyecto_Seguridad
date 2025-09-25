@@ -1,25 +1,35 @@
 import { Component } from '@angular/core';
-import { InicioSesionComponent } from "./loggin/inicio-sesion/inicio-sesion.component";
-import { CrearUsuarioComponent } from './loggin/crear-usuario/crear-usuario.component';
-import { RutinaDiariaComponent } from './cliente/rutina-diaria/rutina-diaria.component';
-import { DatoSaludComponent } from './cliente/dato-salud/dato-salud.component'
-import { CrearRutinaComponent } from "./entrenador/crear-rutina/crear-rutina.component";
-import { AsignarRutinaComponent } from "./entrenador/asignar-rutina/asignar-rutina.component";
-//import { AppRoutingModule } from './app.routes';
+import { RouterOutlet } from '@angular/router';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { HeaderComponent } from './components/header/header.component';
+import { CommonModule } from '@angular/common';
+import { AuthService } from './general/servicios/auth.service';
 
 @Component({
   selector: 'app-root',
   imports: [
-    InicioSesionComponent,
-    CrearUsuarioComponent,
-    RutinaDiariaComponent,
-    DatoSaludComponent,
-    CrearRutinaComponent,
-    AsignarRutinaComponent
-],
+    CommonModule,
+    SidebarComponent,
+    HeaderComponent,
+    RouterOutlet
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'proyecto';
+  userRole: 'administrador' | 'cliente' | 'entrenador' | null = null;
+  isSidebarOpen = false;
+  constructor(private authService: AuthService) { }
+
+  ngOnInit() {
+    this.authService.role$.subscribe(role => {
+      this.userRole = role as any;
+      console.log('Rol actual:', this.userRole);
+    });
+  }
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+    console.log('Sidebar abierto:', this.isSidebarOpen);
+  }
 }

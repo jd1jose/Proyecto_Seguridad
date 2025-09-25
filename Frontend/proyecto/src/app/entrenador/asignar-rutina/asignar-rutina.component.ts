@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SidebarComponent } from "../menu/sidebar/sidebar.component";
-import { HeaderComponent } from "../menu/header/header.component";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ClienteService } from '../../general/servicios/cliente.service';
+import { clienteData } from '../../general/interfaces/cliente';
+import { asignacion, RutinaPreescrita } from '../../general/interfaces/entrenador';
+import { EntrenadorService } from '../../general/servicios/entrenador.service';
 
 interface EjercicioRutina {
   nombre: string;
@@ -19,51 +21,65 @@ interface Rutina {
   selector: 'app-asignar-rutina',
   templateUrl: './asignar-rutina.component.html',
   styleUrls: ['./asignar-rutina.component.css'],
-  imports: [SidebarComponent, HeaderComponent, FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule],
 })
 export class AsignarRutinaComponent implements OnInit {
 
-rutinas: Rutina[] = [
-    { nombre: 'Rutina A', ejercicios: [{ nombre: 'Sentadillas', series: 3, repeticiones: 12 }, { nombre: 'Flexiones', series: 3, repeticiones: 10 }] },
-    { nombre: 'Rutina B', ejercicios: [{ nombre: 'Plancha', series: 3, repeticiones: 60 }, { nombre: 'Burpees', series: 3, repeticiones: 15 }] },
-    { nombre: 'Rutina C', ejercicios: [{ nombre: 'Curl Bíceps', series: 3, repeticiones: 12 }] }
-  ];
+  clientes: clienteData[] = [];
+  rutinas: RutinaPreescrita[] = [];
 
-  clientes: string[] = ['Luis Fernando', 'Maria Luisa', 'Jose David'];
+  clienteSeleccionadoId: number | null = null;
+  rutinaSeleccionadaId: number | null = null;
 
-  clienteSeleccionado: string = '';
-  rutinaSeleccionada: string = '';
+  asignaciones: { [clienteId: number]: number[] } = {};
 
-  asignaciones: { [cliente: string]: string[] } = {};
-
-  constructor() { }
+  constructor(
+    private entrenadorService: EntrenadorService,
+    private clienteService: ClienteService
+  ) { }
 
   ngOnInit(): void {
-    this.clientes.forEach(c => this.asignaciones[c] = []);
+
+    this.clienteService.obtenerClientes().subscribe({
+      next: (res) => {
+        this.clientes = res;
+        res.forEach(c => this.asignaciones[c.id] = []);
+      },
+      error: (err) => console.error('Error al cargar clientes', err)
+    });
+
+    this.entrenadorService.obtenerRutinas().subscribe({
+      next: (res) => this.rutinas = res,
+      error: (err) => console.error('Error al cargar rutinas', err)
+    });
   }
 
+
   guardarAsignacion() {
-    if (!this.clienteSeleccionado || !this.rutinaSeleccionada) {
+    if (!this.clienteSeleccionadoId || !this.rutinaSeleccionadaId) {
       alert('Seleccione un cliente y una rutina');
       return;
     }
 
-    if (!this.asignaciones[this.clienteSeleccionado].includes(this.rutinaSeleccionada)) {
-      this.asignaciones[this.clienteSeleccionado].push(this.rutinaSeleccionada);
-    } else {
-      alert('La rutina ya está asignada a este cliente');
-    }
+    let asig: asignacion = {
+      idUsuario: this.clienteSeleccionadoId,
+      idPreescrita: this.rutinaSeleccionadaId
+    };
 
-    // Limpiar selección
-    this.rutinaSeleccionada = '';
+    this.entrenadorService.guardarAsignacion(asig).subscribe({
+      next: (res) => {
+        alert("✅ Asignación guardada:");
+      },
+      error: (err) => {
+        console.error("❌ Error al asignar rutina:", err);
+      }
+    });
+
+    this.rutinaSeleccionadaId = null;
+    this.clienteSeleccionadoId = null
   }
 
-  eliminarAsignacion(cliente: string, index: number) {
-    this.asignaciones[cliente].splice(index, 1);
-  }
-
-  obtenerEjercicios(rutinaNombre: string) {
-    const rutina = this.rutinas.find(r => r.nombre === rutinaNombre);
-    return rutina ? rutina.ejercicios : [];
+  eliminarAsignacion(clienteId: number, index: number) {
+    this.asignaciones[clienteId].splice(index, 1);
   }
 }

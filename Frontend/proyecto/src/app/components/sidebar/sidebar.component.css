@@ -1,0 +1,84 @@
+/* Botón toggle */
+.toggle-btn {
+  position: fixed;
+
+  background-color: #E63946; /* Primario */
+  color: #F1FAEE; /* Blanco hueso */
+  border: none;
+  padding: 0.6rem 0.8rem;
+  font-size: 1.5rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  z-index: 1200;
+  transition: top 0.3s ease, left 0.3s ease, background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background-color: #b92f3a;
+}
+
+/* Sidebar oculto */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -200px; /* oculto */
+  width: 200px;
+  height: 100%;
+  background-color: #F1FAEE; /* Secundario */
+  transition: left 0.3s ease;
+  padding-top: 60px;
+  z-index: 1000;
+}
+
+/* Sidebar abierto */
+.sidebar.open {
+  left: 0;
+}
+
+/* Lista */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Enlaces */
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #457B9D;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.sidebar ul li a:hover {
+  background-color: #E63946;
+  color: #F1FAEE;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* Sidebar abierto → botón arriba (encima del sidebar) */
+.layout.sidebar-open .toggle-btn {
+  top: 15px;   /* pegado al header */
+  left: 215px; /* sidebar 200px + margen */
+}
+
+/* Sidebar cerrado → botón debajo del header */
+.layout:not(.sidebar-open) .toggle-btn {
+  top: 75px;  /* 👈 justo debajo del header de 60px */
+  left: 15px; /* pegado al borde */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 180px;
+  }
+}

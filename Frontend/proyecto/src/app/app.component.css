@@ -1,0 +1,42 @@
+/* Contenedor principal */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar ocupa espacio fijo en escritorio */
+app-sidebar {
+  flex: 0 0 200px;
+}
+
+/* Contenido ocupa el resto */
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  background: #fff;
+  overflow-y: auto;
+}
+
+/* En móvil, sidebar overlay */
+@media (max-width: 768px) {
+  .app-container {
+    display: block;
+  }
+
+  app-sidebar {
+    position: fixed;
+    top: 0;
+    left: -200px;
+    height: 100%;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+
+  app-sidebar.open {
+    left: 0;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+}

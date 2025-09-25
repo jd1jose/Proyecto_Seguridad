@@ -1,0 +1,21 @@
+<!-- Botón para abrir/cerrar menú -->
+<button class="toggle-btn" (click)="onToggle()">☰</button>
+
+<!-- Menú lateral -->
+<div class="sidebar" [class.open]="isOpen">
+  <ul>
+    <li *ngFor="let item of menuItems">
+      <a [routerLink]="item.route" (click)="toggleSidebar(true)">
+        <span class="material-icons">{{ item.icon }}</span>
+        {{ item.label }}
+      </a>
+    </li>
+    <!-- Extra: botón de cerrar sesión -->
+    <li>
+      <a  (click)="toggleSidebar(false)">
+        <span class="material-icons">logout</span>
+        Cerrar Sesión
+      </a>
+    </li>
+  </ul>
+</div>

@@ -65,3 +65,30 @@ label {
   height: 100%;
   pointer-events: none;
 }
+@media (max-width: 768px) {
+  .app-container {
+    position: relative;
+  }
+
+  app-sidebar {
+    position: absolute;
+    top: 0;
+    left: -220px;
+    width: 220px;
+    height: 100%;
+    transition: left 0.3s ease;
+  }
+
+  app-sidebar.open {
+    left: 0;
+  }
+
+  .main-content {
+    transition: margin-left 0.3s ease;
+  }
+
+  /* Cuando sidebar abierto, empuja contenido */
+  .sidebar-open .main-content {
+    margin-left: 220px;
+  }
+}

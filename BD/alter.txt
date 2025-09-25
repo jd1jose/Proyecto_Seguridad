@@ -1,0 +1,21 @@
+-- 1. Quitar llaves foráneas
+ALTER TABLE rutina_preescrita 
+  DROP FOREIGN KEY fk_rutina_asignacion,
+  DROP FOREIGN KEY fk_rutina_rutina;
+
+-- 2. Quitar los índices
+ALTER TABLE rutina_preescrita 
+  DROP KEY fk_rutina_asignacion,
+  DROP KEY fk_rutina_rutina;
+
+-- 3. Eliminar las columnas que no aparecen en la imagen
+ALTER TABLE rutina_preescrita 
+  DROP COLUMN id_asignacion,
+  DROP COLUMN id_rutina,
+  DROP COLUMN fecha_inicio,
+  DROP COLUMN fecha_fin;
+
+-- 4. Agregar las columnas de la imagen
+ALTER TABLE rutina_preescrita 
+  ADD COLUMN nombre VARCHAR(100) NOT NULL AFTER id,
+  ADD COLUMN fecha_creacion DATE NOT NULL AFTER nombre;

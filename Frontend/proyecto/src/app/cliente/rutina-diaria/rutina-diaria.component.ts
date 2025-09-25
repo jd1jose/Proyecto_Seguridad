@@ -1,36 +1,44 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { SidebarComponent } from "../menu/sidebar/sidebar.component";
-import { HeaderComponent } from "../menu/header/header.component";
-// import confetti from 'canvas-confetti'; // elimina esto
-//const confetti = require('canvas-confetti');
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import confetti from 'canvas-confetti';
+import { ClienteService } from '../../general/servicios/cliente.service'
+import { Ejercicio } from '../../general/interfaces/entrenador';
+import { EntrenadorService } from '../../general/servicios/entrenador.service';
 
 
 @Component({
   selector: 'app-rutina-diaria',
   templateUrl: './rutina-diaria.component.html',
   styleUrls: ['./rutina-diaria.component.css'],
-  imports: [SidebarComponent, HeaderComponent, FormsModule, CommonModule]
+  imports: [FormsModule, CommonModule]
 })
 export class RutinaDiariaComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private clienteService: ClienteService,
+    private entrenadorService: EntrenadorService
+  ) { }
 
   hoy = new Date();
-  ejercicios: any[] = [];
+  ejercicios!: Ejercicio[];
   todosCompletados = false;
+  finalizado = false;
+  idRutina!: number
 
   @ViewChild('confettiCanvas') confettiCanvas!: ElementRef<HTMLCanvasElement>;
 
   ngOnInit(): void {
-    // Puedes cargar esto dinámicamente desde un servicio
-    this.ejercicios = [
-      { nombre: 'Calentamiento 10 min', completado: false },
-      { nombre: 'Sentadillas 3x15', completado: false },
-      { nombre: 'Flexiones 3x12', completado: false },
-      { nombre: 'Plancha 1 min', completado: false },
-    ];
+    this.clienteService.obtenerEjerciciosAsignados().subscribe({
+      next: (result) => {
+        // añadimos campo completado = false para controlarlo en Angular
+        this.ejercicios = result.map(e => ({ ...e, completado: false }));
+      },
+      error: (err) => {
+        console.error('Error al cargar ejercicios asignados', err);
+        this.ejercicios = []; // fallback
+      }
+    });
   }
 
   verificarTodosCompletados() {
@@ -39,7 +47,7 @@ export class RutinaDiariaComponent implements OnInit {
 
   finalizarDia() {
     // Confeti 🎉
-    /*const myConfetti = confetti.create(this.confettiCanvas.nativeElement, {
+    const myConfetti = confetti.create(this.confettiCanvas.nativeElement, {
       resize: true,
       useWorker: true
     });
@@ -48,7 +56,10 @@ export class RutinaDiariaComponent implements OnInit {
       particleCount: 150,
       spread: 80,
       origin: { y: 0.6 }
-    });*/
+    });
+    this.finalizado = true
+
+    this.clienteService.finalizarRutinaDiaria(this.idRutina).toPromise()
 
     // Aquí podrías guardar en backend que se finalizó el día
   }

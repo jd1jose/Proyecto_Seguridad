@@ -93,3 +93,27 @@ CREATE TABLE Validacion_Rutina (
     CONSTRAINT fk_validacion_rutina FOREIGN KEY (id_rutina_preescrita) REFERENCES Rutina_Preescrita(id),
     CONSTRAINT fk_validacion_ejercicio FOREIGN KEY (id_ejercicio) REFERENCES Ejercicio(id)
 );
+
+CREATE TABLE rutina_preescrita_ejercicio (
+  id_rutina_preescrita INT(11) NOT NULL,
+  id_ejercicio INT(11) NOT NULL,
+  series INT(11) NOT NULL,
+  repeticiones INT(11) NOT NULL,
+  PRIMARY KEY (id_rutina_preescrita, id_ejercicio),
+  CONSTRAINT fk_rutina_preescrita 
+    FOREIGN KEY (id_rutina_preescrita) REFERENCES rutina_preescrita(id),
+  CONSTRAINT fk_ejercicio 
+    FOREIGN KEY (id_ejercicio) REFERENCES ejercicio(id)
+);
+
+CREATE TABLE Asignacion_Rutina (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  idPreescrita INT(11) NOT NULL,
+  idUsuario INT(11) NOT NULL,
+  fechaInicio DATE DEFAULT NULL,
+  fechaFin DATE DEFAULT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_asignacion_rutina_preescrita FOREIGN KEY (idPreescrita) REFERENCES rutina_preescrita (id),
+  CONSTRAINT fk_asignacion_rutina_usuario FOREIGN KEY (idUsuario) REFERENCES usuario (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
