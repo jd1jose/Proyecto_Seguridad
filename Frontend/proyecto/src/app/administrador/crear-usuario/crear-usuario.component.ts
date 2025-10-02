@@ -61,7 +61,7 @@ export class CrearUsuarioComponent implements OnInit {
     }
     this.administradorService.registrarUsuario(this.usuario).subscribe({
       next: (res) => {
-        console.log('Usuario registrado:', res);
+        //console.log('Usuario registrado:', res);
         alert('Registro exitoso');
         this.usuario = {
           nombre: '',
@@ -75,8 +75,8 @@ export class CrearUsuarioComponent implements OnInit {
         };
       },
       error: (err) => {
-        console.error('Error en el registro:', err);
-        alert('Error al registrar usuario');
+        //console.error('Error en el registro:', err);
+        alert(err.error.error);
       }
     });
   }

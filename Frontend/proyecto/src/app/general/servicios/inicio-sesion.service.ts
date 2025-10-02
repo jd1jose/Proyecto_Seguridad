@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { LoginRequest } from '../interfaces/inicio-sesion';
 import { Observable } from 'rxjs';
 import { generalURL } from '../interfaces/general';
-import { encrypt } from '../seguridad/encrypt';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +15,10 @@ export class InicioSesionService {
 
   login(credentials: LoginRequest): Observable<any> {
     return this.http.post(`${this.apiUrl.url}/login`, { credentials });
+  }
+
+  verificarOtp(email: string, codigo: string): Observable<any> {
+    return this.http.post(`${this.apiUrl.url}/verificar-otp`, { email, codigo });
   }
 
   saveToken(token: string) {

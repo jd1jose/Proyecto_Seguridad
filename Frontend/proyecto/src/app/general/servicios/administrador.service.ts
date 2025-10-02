@@ -12,7 +12,7 @@ private apiUrl = generalURL;
 constructor(private http: HttpClient) { }
 
 registrarUsuario(usuario: Usuario): Observable<any> {
-    return this.http.post(`${this.apiUrl.url}/registar`, usuario);
+    return this.http.post(`${this.apiUrl.url}/registrar`, usuario);
   }
 
 }

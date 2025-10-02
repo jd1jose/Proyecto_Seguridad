@@ -1,0 +1,12 @@
+<!-- Botón para abrir/cerrar menú -->
+<button class="toggle-btn" (click)="toggleSidebar()">
+  ☰
+</button>
+
+<!-- Menú lateral -->
+<div class="sidebar" [class.open]="isOpen">
+  <ul>
+    <li><a routerLink="/administrador" (click)="toggleSidebar()">👥  Crear Usuario</a></li>
+    <li><a href="#">🚪 Cerrar Sesión</a></li>
+  </ul>
+</div>

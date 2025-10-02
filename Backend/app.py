@@ -5,6 +5,12 @@ from flask_jwt_extended import (
 )
 from datetime import date
 from flask import Flask, request, jsonify
+import re
+import random
+import smtplib
+from datetime import datetime, timedelta
+from email.mime.text import MIMEText
+from email.header import Header
 
 app = Flask(__name__)
 CORS(app)
@@ -17,9 +23,9 @@ jwt = JWTManager(app)
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'admin123',
-    'database': 'BD_GYM',
-
+    'password': 'sql123',
+    'database': 'bd_gym',
+    'port': '3305',
 }
 
 # ------------------ PING ------------------
@@ -41,12 +47,27 @@ def ping():
 def crear_usuario():
     data = request.get_json()
 
-    password_bytes = data["password"].encode('utf-8')
+    # Validar contraseña segura
+    password = data["password"]
+    if not es_contrasena_segura(password):
+        return jsonify({"error": "La contraseña debe tener al menos 8 caracteres, "
+                                 "una mayúscula, una minúscula, un número y un carácter especial"}), 400
+
+    # Hash de contraseña
+    password_bytes = password.encode('utf-8')
     hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
 
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
 
+    # Validar que el correo no exista
+    cursor.execute("SELECT id FROM Usuario WHERE correo_electronico = %s", (data["email"],))
+    if cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "El correo ya está registrado"}), 400
+
+    # Insertar usuario
     query = """
         INSERT INTO Usuario (nombre, apellido, fecha_nacimiento, genero, correo_electronico, telefono, rol, contrasena)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
@@ -85,14 +106,79 @@ def login():
         if not bcrypt.checkpw(password.encode("utf-8"), user["contrasena"].encode("utf-8")):
             return jsonify({"message": "Contraseña incorrecta"}), 401
 
-        #token = create_access_token(identity=user["id"])  # Guardamos el id del usuario en el token
+        # ✅ Generar OTP de 6 dígitos válido 5 minutos
+        codigo = str(random.randint(100000, 999999))
+        expira = datetime.now() + timedelta(minutes=5)
+
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO otp_tokens (correo_electronico, codigo, expira, usado)
+            VALUES (%s, %s, %s, 0)
+        """, (email, codigo, expira))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        # ✅ Enviar OTP al correo
+        enviar_codigo(email, codigo)
+
+        return jsonify({"message": "Código OTP enviado al correo"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/verificar-otp", methods=["POST"])
+def verificar_otp():
+    data = request.json
+    email = data.get("email")
+    codigo = data.get("codigo")
+
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT * FROM otp_tokens 
+            WHERE correo_electronico = %s AND codigo = %s AND usado = 0
+            ORDER BY id DESC LIMIT 1
+        """, (email, codigo))
+        registro = cursor.fetchone()
+
+        if not registro:
+            cursor.close()
+            conn.close()
+            return jsonify({"message": "Código inválido"}), 400
+
+        if registro["expira"] < datetime.now():
+            cursor.close()
+            conn.close()
+            return jsonify({"message": "El código expiró"}), 400
+
+        # Marcar OTP como usado
+        cursor.execute("UPDATE otp_tokens SET usado = 1 WHERE id = %s", (registro["id"],))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        # ✅ Obtener usuario y generar token
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM Usuario WHERE correo_electronico = %s", (email,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if not user:
+            return jsonify({"message": "Usuario no encontrado"}), 404
+
         token = create_access_token(identity=str(user["id"]))
 
         return jsonify({"token": token, "rol": user["rol"]}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+    
 # ------------------ RUTA PROTEGIDA ------------------
 @app.route("/api/protegido", methods=["GET"])
 @jwt_required()
@@ -414,6 +500,44 @@ def obtener_ejercicios_usuario():
         print("❌ Error:", str(e))
         return jsonify({"error": str(e)}), 500
 
+
+def es_contrasena_segura(contrasena: str) -> bool:
+    """
+    Reglas:
+    - Mínimo 8 caracteres
+    - Al menos 1 letra mayúscula
+    - Al menos 1 letra minúscula
+    - Al menos 1 número
+    - Al menos 1 carácter especial
+    """
+    if len(contrasena) < 8:
+        return False
+    if not re.search(r"[A-Z]", contrasena):
+        return False
+    if not re.search(r"[a-z]", contrasena):
+        return False
+    if not re.search(r"[0-9]", contrasena):
+        return False
+    if not re.search(r"[@$!%*?&.#_]", contrasena):
+        return False
+    return True
+
+# 🔹 Función para enviar correos
+def enviar_codigo(email, codigo):
+    servidor = smtplib.SMTP("smtp.gmail.com", 587)
+    servidor.starttls()
+    servidor.login("mytrainronline@gmail.com", "ulfs hvry kjuh jpmp")  # Usa clave de aplicación
+    
+    subject = "Código de verificación"
+    body = f"Tu código de verificación es: {codigo}"
+
+    mensaje = MIMEText(body, "plain", "utf-8")
+    mensaje["From"] = "tucorreo@gmail.com"
+    mensaje["To"] = email
+    mensaje["Subject"] = Header(subject, "utf-8")
+
+    servidor.sendmail("mytrainronline@gmail.com", email, mensaje.as_string())
+    servidor.quit()
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

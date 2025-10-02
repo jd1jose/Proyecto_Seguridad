@@ -117,3 +117,11 @@ CREATE TABLE Asignacion_Rutina (
   CONSTRAINT fk_asignacion_rutina_usuario FOREIGN KEY (idUsuario) REFERENCES usuario (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+CREATE TABLE otp_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    correo_electronico VARCHAR(255) NOT NULL,
+    codigo VARCHAR(6) NOT NULL,
+    expira DATETIME NOT NULL,
+    usado TINYINT DEFAULT 0
+);
