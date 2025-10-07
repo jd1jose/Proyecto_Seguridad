@@ -11,10 +11,15 @@ import smtplib
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from email.header import Header
+from Crypto.Cipher import AES
+import base64
+import json
+import hashlib
 
 app = Flask(__name__)
-CORS(app)
 
+CORS(app)
+SECRET_KEY = 'mi_clave_super_segura_123!' 
 # Configuración de JWT
 app.config["JWT_SECRET_KEY"] = "clavesesion"  # 🔑 Clave para firmar tokens
 jwt = JWTManager(app)
@@ -23,9 +28,9 @@ jwt = JWTManager(app)
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'sql123',
-    'database': 'bd_gym',
-    'port': '3305',
+    'password': 'admin123',
+    'database': 'BD_GYM',
+    'port': '3306',
 }
 
 # ------------------ PING ------------------
@@ -85,12 +90,20 @@ def crear_usuario():
 
     return jsonify({"mensaje": "Usuario registrado correctamente"}), 201
 
+def decrypt_aes(encrypted_data,key):
+    key = hashlib.sha256(key.encode()).digest()
+    encrypted_data = base64.b64decode(encrypted_data)
+    cipher = AES.new(key, AES.MODE_ECB)
+    decrypted = cipher.decrypt(encrypted_data)
+    return decrypted.decode().rstrip('\0')
 # ------------------ LOGIN ------------------
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json.get("credentials", {})
-    email = data.get("email")
-    password = data.get("password")
+    decrypted_text = decrypt_aes(data,SECRET_KEY)
+    credentials = json.loads(decrypted_text)
+    email = credentials['email']
+    password = credentials['password']
 
     try:
         conn = mysql.connector.connect(**db_config)
