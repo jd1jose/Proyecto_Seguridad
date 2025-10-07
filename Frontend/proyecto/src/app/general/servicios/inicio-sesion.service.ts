@@ -19,7 +19,7 @@ export class InicioSesionService {
       JSON.stringify(credentials),
       this.secretKey
     ).toString();
-    return this.http.post(`${this.apiUrl.url}/login`, { encrypted });
+    return this.http.post(`${this.apiUrl.url}/login`, {data: encrypted });
   }
 
   verificarOtp(email: string, codigo: string): Observable<any> {
