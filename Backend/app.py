@@ -90,16 +90,37 @@ def crear_usuario():
 
     return jsonify({"mensaje": "Usuario registrado correctamente"}), 201
 
-def decrypt_aes(encrypted_data,key):
-    key = hashlib.sha256(key.encode()).digest()
-    encrypted_data = base64.b64decode(encrypted_data)
-    cipher = AES.new(key, AES.MODE_ECB)
-    decrypted = cipher.decrypt(encrypted_data)
-    return decrypted.decode().rstrip('\0')
+def decrypt_aes(encrypted_data,passphrase):
+    encrypted_data_bytes = base64.b64decode(encrypted_data)
+    
+    # Verificar formato 'Salted__'
+    if encrypted_data_bytes[:8] != b"Salted__":
+        raise ValueError("Formato no reconocido, falta encabezado 'Salted__'")
+
+    salt = encrypted_data_bytes[8:16]
+    ciphertext = encrypted_data_bytes[16:]
+
+    # Derivar key + iv igual que CryptoJS (OpenSSL EVP_BytesToKey)
+    key_iv = hashlib.md5(passphrase.encode() + salt).digest()
+    while len(key_iv) < 32 + 16:  # 32 bytes key + 16 IV
+        key_iv += hashlib.md5(key_iv[-16:] + passphrase.encode() + salt).digest()
+    key = key_iv[:32]
+    iv = key_iv[32:48]
+
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    decrypted = cipher.decrypt(ciphertext)
+
+    # Quitar padding (Pkcs7)
+    pad_len = decrypted[-1]
+    decrypted = decrypted[:-pad_len]
+
+    return decrypted.decode("utf-8")
 # ------------------ LOGIN ------------------
 @app.route("/login", methods=["POST"])
 def login():
-    data = request.json.get("credentials", {})
+    
+    data = request.json.get("data", "")
+    print(data)
     decrypted_text = decrypt_aes(data,SECRET_KEY)
     credentials = json.loads(decrypted_text)
     email = credentials['email']
