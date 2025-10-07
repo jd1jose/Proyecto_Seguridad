@@ -10,7 +10,7 @@ import { SidebarComponent } from '../menu/sidebar/sidebar.component';
   templateUrl: './crear-usuario.component.html',
   styleUrls: ['./crear-usuario.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule,SidebarComponent]
+  imports: [FormsModule, CommonModule]
 })
 export class CrearUsuarioComponent implements OnInit {
 

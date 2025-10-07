@@ -1,20 +1,25 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LoginRequest } from '../interfaces/inicio-sesion';
 import { Observable } from 'rxjs';
 import { generalURL } from '../interfaces/general';
-
+import * as CryptoJS from 'crypto-js';
 @Injectable({
   providedIn: 'root'
 })
 export class InicioSesionService {
 
   private apiUrl = generalURL;
-
+  private secretKey = 'mi_clave_super_segura_123!';
   constructor(private http: HttpClient) { }
 
   login(credentials: LoginRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl.url}/login`, { credentials });
+     const encrypted = CryptoJS.AES.encrypt(
+      JSON.stringify(credentials),
+      this.secretKey
+    ).toString();
+    return this.http.post(`${this.apiUrl.url}/login`, { encrypted });
   }
 
   verificarOtp(email: string, codigo: string): Observable<any> {
